@@ -42,8 +42,8 @@
   				<div class="shuru">
   					<p style="font-family: Verdana-Bold;font-size: 32px; color: #9e9e9e;text-align: left;">项目名称 - Project</p>
   					项目名称：
-  					<v-input v-model="projectName"></v-input>
-  					<v-button @click="addProject" type="primary" style="width:30px;height:20px;">确定</v-button>
+  					<v-input v-model="projectName" style="width:276px;"></v-input>
+  					<v-button @click="addProject" type="primary" style="margin-top:10px;width:314px;text-align:center;">确定</v-button>
   				</div>
   			</v-group>
   		</div>
@@ -332,7 +332,7 @@ export default {
   font-size: 16px;
 }
 .modal1 {
-  height: 500px;
+  height: 170px;
   width: 400px;
   border-radius: 10px;
 }

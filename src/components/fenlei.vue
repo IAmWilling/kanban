@@ -123,8 +123,25 @@ export default {
       //判断开关是否开启
       if (this.isShow) {
         //判断标题和内容不能为空的
+        
         if (this.textTitle != "" && this.textArea != "") {
+          for(let i = 0;i<this.$store.state.fenleilist.length;i++){
+            if(this.$store.state.fenleilist[i].cont==this.kanban){
+              for(let j = 0;j<this.$store.state.fenleilist[i].ar.length;j++){
+                if(this.$store.state.fenleilist[i].ar[j].title==this.nowPitchTitle){
+                  for(let k = 0;k<this.$store.state.fenleilist[i].ar[j].fenlei.length;k++){
+                    if(this.$store.state.fenleilist[i].ar[j].fenlei[k].title==this.textTitle){
+                      this.youth.toast("内容标题不能一致哦！")
+                      return;
+
+                    }
+                  }
+                }
+              }
+            } 
+          }
           this.youth.close("addContentModal"); //打开增加内容窗口
+          
           let that = this;
           //创建一个对象 对对象进行加工
           let a = {
