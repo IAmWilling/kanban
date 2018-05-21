@@ -16,8 +16,7 @@ export default {
 
 <style>
 body{
-  overflow-x:auto ;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 html::-webkit-scrollbar {
   /*滚动条整体样式*/

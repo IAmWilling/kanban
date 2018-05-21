@@ -1,6 +1,6 @@
 <template>
   <div>
-  	<div v-for="(items,index) in this.$store.state.fenleilist" :key="index">
+  	<div v-for="(items,index) in this.$store.state.fenleilist" :key="index" class="norwap-scroll">
   		<div class="fenlei-item" v-if="items.cont == kanban" :style="{background:index%2==0?'#fff':'#fafafa'}" v-for="(item,index) in items.ar"
   		 :key="index" @drop='drop($event)' @dragover='allowDrop($event)'>
   
@@ -53,9 +53,9 @@
   			<transition name="fade">
   				<div class="modal-div1-view" v-show="isShow">
   					<h3>标题 - Title</h3>
-  					<v-input style="width:330px;" v-model="textTitle"></v-input>
+  					<v-input style="width:330px;" v-model="textTitle" @keydown.native.enter="addSure"></v-input>
   					<p>详细任务</p>
-  					<textarea name="text-content" id="" cols="44" rows="10" v-model="textArea"></textarea>
+  					<textarea name="text-content" id="" cols="44" rows="10" v-model="textArea" @keydown.ctrl.enter.native="addSure"></textarea>
   				</div>
   			</transition>
   			<div class="modal-div1-btn">
@@ -104,7 +104,6 @@ export default {
     };
   },
   methods: {
-    bu() {},
     addContent(e) {
       this.nowPitchTitle = e.target.parentNode.childNodes[0].innerText; //获取当前标题 用于Vuex对当前点击的是哪个分类进行判断
       this.youth.open("addContentModal"); //打开添加内容的模态窗
@@ -145,7 +144,7 @@ export default {
                       this.$store.state.fenleilist[i].ar[j].fenlei[k].title ==
                       this.textTitle
                     ) {
-                      this.youth.toast("内容标题不能一致！",true);
+                      this.youth.toast("内容标题不能一致！", true);
                       return;
                     }
                   }
@@ -154,7 +153,7 @@ export default {
             }
           }
           this.youth.close("addContentModal"); //打开增加内容窗口
-          
+
           let that = this;
           //创建一个对象 对对象进行加工
           let a = {
@@ -224,9 +223,11 @@ export default {
             this.$store.commit("dragAndDrop", obj);
             this.youth.toast("移动完成！");
           }
-        }).catch(error=>{
-           this.youth.toast("移动失败！错误原因："+error,true);
         })
+        .catch(error => {
+          this.youth.toast("移动失败！错误原因：" + error, true);
+        });
+      this.$store.commit("dragAndDrop", obj);
     },
     //放置类型 必须判断放置的div不然就会放到别处而引发bug
     allowDrop(e) {
@@ -344,7 +345,7 @@ export default {
   background-color: #ffff;
   cursor: pointer;
   position: relative;
-  z-index: 100;
+  z-index: 10;
   display: block;
 }
 .chakanxq {
@@ -390,6 +391,30 @@ export default {
   background: @change_Blue;
 }
 .detailsDiv1::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+.norwap-scroll {
+  .overflow(auto,@hid);
+  width: 1575px;
+  height: 828px;
+  position: relative;
+  white-space: nowrap;
+}
+.norwap-scroll::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 7px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 7px;
+}
+.norwap-scroll::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px @change_Blue;
+  background: @change_Blue;
+}
+.norwap-scroll::-webkit-scrollbar-track {
   /*滚动条里面轨道*/
   -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 0;

@@ -42,8 +42,8 @@
   				<div class="shuru">
   					<p style="font-family: Verdana-Bold;font-size: 32px; color: #9e9e9e;text-align: left;">项目名称 - Project</p>
   					项目名称：
-  					<v-input v-model="projectName" style="width:276px;"></v-input>
-  					<v-button @click="addProject" type="primary" style="margin-top:10px;width:314px;text-align:center;">确定</v-button>
+  					<v-input v-model="projectName" style="width:276px;" @keydown.native.enter="addProject"></v-input>
+  					<v-button @click="addProject"   type="primary" style="margin-top:10px;width:314px;text-align:center;">确定</v-button>
   				</div>
   			</v-group>
   		</div>
@@ -52,7 +52,7 @@
   		<div class="select-fenlei">
   			<div class="panelSelect">
   				<p>分类名称 - </p>
-  				<v-input v-model="fenleiName"></v-input>
+  				<v-input v-model="fenleiName" @keydown.native.enter="sureCreate"></v-input>
   
   			</div>
   			<div class="panel_btn">
@@ -80,7 +80,7 @@ export default {
       projectName: "",
       fenleiName: "",
       isGuanLi: false
-    };
+    }
   },
   data() {
     return {
@@ -174,9 +174,9 @@ export default {
 
         //点击一下 自动加一个314px的宽度 因为我设置的是float:left （PS：我的思路是这样的 不按照做的话可能会崩掉....））
 
-        let width = parseInt(this.$refs.botDiv.offsetWidth);
-        width += 314;
-        this.$refs.botDiv.style.width = width + "px";
+        // let width = parseInt(this.$refs.botDiv.offsetWidth);
+        // width += 314;
+        // this.$refs.botDiv.style.width = width + "px";
 
         this.youth.close("addFenLeiModal");
       } else {
@@ -229,7 +229,7 @@ export default {
 #MainDiv {
   width: 1900px;
   height: 940px;
-  .overflow();
+  overflow: hidden;
 }
 #LeftDiv {
   width: 320px;
@@ -366,12 +366,12 @@ export default {
 #BottomDiv {
   width: 1575px;
   height: 828px;
-
+  display: inline-block;
+  position: relative;
   .absolute;
   top: 100px;
   left: 330px;
-  overflow-y: hidden;
-  overflow-x: auto;
+  overflow: auto;
 }
 #BottomDiv::-webkit-scrollbar {
   /*滚动条整体样式*/
