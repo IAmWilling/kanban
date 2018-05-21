@@ -93,34 +93,29 @@ export default {
     },
     addProject() {
       //添加向项目列表
+      this.projectName = this.projectName.replace(/(^\s*)|(\s*$)/g, "");
       if (this.projectName.length != 0) {
-       
-
-        
         let projectName = this.projectName;
         //判断不能有重复名称
         for (let i = 0; i < this.$store.state.fenleilist.length; i++) {
           if (this.$store.state.fenleilist[i].cont == projectName) {
             this.youth.toast("不能有重复名称!", true);
-            return;     //如果有直接返回不给任何机会
+            return; //如果有直接返回不给任何机会
           }
         }
-        console.log(this.$store.state.fenleilist);
+
         this.$store.commit("changeProjectlist", this.projectName);
-         this.youth.close("addKanBanModal");
+        this.youth.close("addKanBanModal");
         axios
           .post("/api/project", {
             project: this.projectName
           })
-          .then(
-            data => {
-              alert(data);
-              this.youth.close("addKanBanModal");
-            },
-            data => {
-              alert("发送失败！");
-            }
-          );
+          .then(data => {
+            this.youth.close("addKanBanModal");
+          })
+          .catch(error => {
+            this.youth.toast("发送失败,错误原因：" + error, true);
+          });
       } else {
         this.youth.toast("Project名称不能为空的！", true);
       }
@@ -135,6 +130,9 @@ export default {
     },
     // 确认创建分类按钮
     sureCreate() {
+      //去掉前后空格
+      this.fenleiName = this.fenleiName.replace(/(^\s*)|(\s*$)/g, "");
+
       if (this.fenleiName.length != 0) {
         //当前选中的porject列表项，和分类名字
 
@@ -145,28 +143,32 @@ export default {
         var arr = [str, this.fenleiName];
         for (let i = 0; i < this.$store.state.fenleilist.length; i++) {
           if (this.$store.state.fenleilist[i].cont == str) {
-            for(let j = 0;j<this.$store.state.fenleilist[i].ar.length;j++){
-              if(this.$store.state.fenleilist[i].ar[j].title==this.fenleiName){
-                 this.youth.toast("分类-不能有重复名称!", true);
+            for (
+              let j = 0;
+              j < this.$store.state.fenleilist[i].ar.length;
+              j++
+            ) {
+              if (
+                this.$store.state.fenleilist[i].ar[j].title == this.fenleiName
+              ) {
+                this.youth.toast("分类-不能有重复名称!", true);
                 return;
               }
             }
-           
           }
         }
-        axios.post(
-          "/api/class",
-          {
+
+        axios
+          .post("/api/class", {
             project: str,
             class: this.fenleiName
-          },
-          data => {
-            alert(data);
-          },
-          erro => {
-            alert("发送失败：" + erro);
-          }
-        );
+          })
+          .then(data => {
+            this.youth.toast("创建成功");
+          })
+          .catch(error => {
+            this.youth.toast("创建失败,错误原因：" + error, true);
+          });
 
         this.$store.commit("changeFenlei", arr); //发送数组 进行创建添加 并显示到视图当中
 
@@ -177,8 +179,6 @@ export default {
         this.$refs.botDiv.style.width = width + "px";
 
         this.youth.close("addFenLeiModal");
-
-        this.youth.toast("创建成功！");
       } else {
         this.youth.toast("创建失败！名称不能是空的");
       }
@@ -212,7 +212,7 @@ export default {
             this.youth.toast("获取数据成功!");
           },
           error => {
-            alert("发送失败 : " + error);
+            this.youth.toast("获取数据失败,错误原因：" + error, true);
           }
         );
     }

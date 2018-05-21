@@ -14,19 +14,19 @@
   				 @dragstart.native="drapStartMove($event)" id="cardd">
   					<v-title>
   						<p style="font-family: PingFangSC-Regular;
-  							font-size: 20px;
-  							color: #03A9F4;
-  							letter-spacing: 0;">
+    							font-size: 20px;
+    							color: #03A9F4;
+    							letter-spacing: 0;">
   							{{i.title}}
   						</p>
   						<h2>详细内容</h2>
   						<div style="width:225px;
-  							height:85px;
-  							overflow: hidden;
-  							text-overflow: ellipsis;
-  							display: -webkit-box;
-  							-webkit-line-clamp: 4;
-  							-webkit-box-orient: vertical;">
+    							height:85px;
+    							overflow: hidden;
+    							text-overflow: ellipsis;
+    							display: -webkit-box;
+    							-webkit-line-clamp: 4;
+    							-webkit-box-orient: vertical;">
   							{{i.content}}
   						</div>
   						<!-- <a href="#" class="chakanxq">查看详情</a> -->
@@ -68,9 +68,9 @@
   		<v-card id="detailsCard">
   			<v-title>
   				<p style="font-family: PingFangSC-Regular;
-  							font-size: 20px;
-  							color: #03A9F4;
-  							letter-spacing: 0;">{{detailsTitle}}</p>
+    							font-size: 20px;
+    							color: #03A9F4;
+    							letter-spacing: 0;">{{detailsTitle}}</p>
   				<h2>详细内容</h2>
   				<div class="detailsDiv1">
   					{{detailsContent}}
@@ -123,22 +123,35 @@ export default {
       //判断开关是否开启
       if (this.isShow) {
         //判断标题和内容不能为空的
-        
+        this.textTitle = this.textTitle.replace(/(^\s*)|(\s*$)/g, "");
         if (this.textTitle != "" && this.textArea != "") {
-          for(let i = 0;i<this.$store.state.fenleilist.length;i++){
-            if(this.$store.state.fenleilist[i].cont==this.kanban){
-              for(let j = 0;j<this.$store.state.fenleilist[i].ar.length;j++){
-                if(this.$store.state.fenleilist[i].ar[j].title==this.nowPitchTitle){
-                  for(let k = 0;k<this.$store.state.fenleilist[i].ar[j].fenlei.length;k++){
-                    if(this.$store.state.fenleilist[i].ar[j].fenlei[k].title==this.textTitle){
-                      this.youth.toast("内容标题不能一致哦！")
+          for (let i = 0; i < this.$store.state.fenleilist.length; i++) {
+            if (this.$store.state.fenleilist[i].cont == this.kanban) {
+              for (
+                let j = 0;
+                j < this.$store.state.fenleilist[i].ar.length;
+                j++
+              ) {
+                if (
+                  this.$store.state.fenleilist[i].ar[j].title ==
+                  this.nowPitchTitle
+                ) {
+                  for (
+                    let k = 0;
+                    k < this.$store.state.fenleilist[i].ar[j].fenlei.length;
+                    k++
+                  ) {
+                    if (
+                      this.$store.state.fenleilist[i].ar[j].fenlei[k].title ==
+                      this.textTitle
+                    ) {
+                      this.youth.toast("内容标题不能一致！",true);
                       return;
-
                     }
                   }
                 }
               }
-            } 
+            }
           }
           this.youth.close("addContentModal"); //打开增加内容窗口
           
@@ -157,7 +170,10 @@ export default {
               content: that.textArea
             })
             .then(response => {
-              this.youth.toast("创建成功")
+              this.youth.toast("创建成功");
+            })
+            .catch(error => {
+              this.youth.toast("创建内容失败,错误原因：" + error, true);
             });
           this.$store.commit("addfenlei", b); //发送到Vuex全局中
         } else {
@@ -174,7 +190,7 @@ export default {
     drapStartMove(e) {
       this.dom = e.currentTarget;
       e.dataTransfer.setData("text", ""); //由于要求火狐必须设置有拖拽数据才可以展示拖拽
-      console.log(this.dom);
+
       //层级关系 this.dom.childNodes[0]表示v-title标签
       //this.dom.childNodes[0].childNodes[0] 表示v-title下面的p标签 也就是title标题
       //this.dom.childNodes[0].childNodes[4] 表示v-title下面的div标签 也就是content标题
@@ -182,9 +198,6 @@ export default {
       this.DragAndDropTitle = this.dom.childNodes[0].childNodes[0].innerText;
       this.DragAndDropContent = this.dom.childNodes[0].childNodes[4].innerText;
       this.formerClassify = this.dom.parentNode.parentNode.childNodes[0].innerText; //原拖放标题
-
-      console.log(this.DragAndDropTitle);
-      console.log(this.DragAndDropContent);
     },
     //拖动期间执行判断任务
     drop(e) {
@@ -197,6 +210,7 @@ export default {
         DragAndDropContent: this.DragAndDropContent, //拖拽元素内容
         formerClassify: this.formerClassify //原拖放标题
       };
+
       axios
         .post("/api/move", {
           nowPitchProjectTitle: document.querySelector(".rrr").innerText, //表示当前project项标题
@@ -207,14 +221,12 @@ export default {
         })
         .then(response => {
           if (response.data) {
-            console.log(response.data)
             this.$store.commit("dragAndDrop", obj);
             this.youth.toast("移动完成！");
           }
-        });
-
-      console.log(e.target.childNodes[0].innerText);
-      console.log(document.querySelector(".rrr").innerText);
+        }).catch(error=>{
+           this.youth.toast("移动失败！错误原因："+error,true);
+        })
     },
     //放置类型 必须判断放置的div不然就会放到别处而引发bug
     allowDrop(e) {

@@ -38,7 +38,7 @@ export default {
       axios
         .post("/api/login?t = " + new Date().getTime(), element) //实时变化的地址，后台不会接收?t=，这样不会受到缓存的干扰
         .then(response => {
-          console.log(response);
+         
           // console.log('请求成功' + eval(response));
           if (response.data.login == true) {
             this.$router.push("/index"); //路由跳转到首页
